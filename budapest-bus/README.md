@@ -128,6 +128,30 @@ are produced by it.
 `assets/model/bkv_bus.obj` + `.mtl` can be imported into Blender, and the OBJ
 mesh is what the viewer's second mode loads.
 
+## Hosting it on GitHub Pages
+
+The folder is completely static (`index.html`, `src/`, `vendor/three/`,
+`assets/`, `preview/`), with no bundler and no server side code, so GitHub Pages
+can serve it as-is. Pick whichever route suits you:
+
+| Route | Setup | URL |
+| --- | --- | --- |
+| `gh-pages` branch (already pushed for you) | Settings → Pages → *Deploy from a branch* → `gh-pages` → `/ (root)` | `https://<owner>.github.io/<repo>/` |
+| Whole repo from `main` | Settings → Pages → *Deploy from a branch* → `main` → `/ (root)` | `https://<owner>.github.io/<repo>/budapest-bus/` |
+| GitHub Actions | copy `docs/pages-workflow.yml` to `.github/workflows/pages.yml`, then Settings → Pages → Source: **GitHub Actions** | `https://<owner>.github.io/<repo>/` |
+
+Notes:
+
+* `.nojekyll` is committed at the repository root **and** inside this folder.
+  Jekyll excludes `vendor/` by default, which would break the import map that
+  loads three.js.
+* To refresh the branch based copy after changing the model:
+  `bash budapest-bus/tools/publish-gh-pages.sh` (it rebuilds the assets, copies
+  the folder into a temporary worktree and pushes `gh-pages`).
+* Because the OBJ and every texture are part of the site, they can be downloaded
+  straight from the published URL, e.g.
+  `.../assets/model/bkv_bus.obj` or `.../assets/textures/bodySideR.png`.
+
 ## Notes and limitations
 
 * The livery is a plausible BKV scheme (BKV blue, light blue wave, operator
