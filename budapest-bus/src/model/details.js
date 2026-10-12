@@ -6,7 +6,7 @@
  * the parts follow the rounded front and rear corners.
  */
 
-import { SPEC, frontSurfaceX, rearSurfaceX, DESTINATION } from './spec.js';
+import { SPEC, frontSurfaceX, rearSurfaceX, widthAt, DESTINATION } from './spec.js';
 
 /** A panel that follows the front surface (`z` and `y` are world coordinates). */
 function frontPanel(part, { y0, y1, z0, z1, offset, uv, nx = 5, ny = 3, material }) {
@@ -131,7 +131,8 @@ export function buildRear(part) {
   }
 
   // engine compartment louvres, a recessed panel with slats
-  rearPanel(part, { y0: 1.05, y1: 1.72, z0: -0.78, z1: 0.78, offset: 0.035, nx: 5, ny: 2, material: DARK, uv: () => [0.5, 0.5] });
+  // negative offset pushes the panel inboard, i.e. recesses it behind the slats
+  rearPanel(part, { y0: 1.05, y1: 1.72, z0: -0.78, z1: 0.78, offset: -0.045, nx: 5, ny: 2, material: DARK, uv: () => [0.5, 0.5] });
   for (let i = 0; i < 7; i++) {
     const y = 1.08 + i * 0.09;
     const za = -0.75;
@@ -233,6 +234,29 @@ export function buildMirrors(part) {
       [wide[0] - 0.041, wide[1] - 0.085, wide[2] + 0.08],
       [wide[0] - 0.041, wide[1] + 0.085, wide[2] + 0.08],
       [wide[0] - 0.041, wide[1] + 0.085, wide[2] - 0.08],
+      [0, 0], [1, 0], [1, 1], [0, 1],
+    );
+  }
+}
+
+/**
+ * Small LED route number panels on the right hand side, mounted just inside
+ * the window so they read through the tinted glass.
+ */
+export function buildSideDisplays(part) {
+  const housing = part('plastic.dark', 'trim.dark');
+  const led = part('led.side', 'led.side');
+  const x0 = 3.55;
+  const x1 = 4.05;
+  const y0 = 2.06;
+  const y1 = 2.34;
+  const zAt = (y) => widthAt(y);
+  // housing plus the LED face, both slightly inside the glazing
+  for (const [zOff, target] of [[-0.02, housing], [-0.035, led]]) {
+    const z0 = zAt(y0) + zOff;
+    const z1 = zAt(y1) + zOff;
+    target.quad(
+      [x0, y0, z0], [x1, y0, z0], [x1, y1, z1], [x0, y1, z1],
       [0, 0], [1, 0], [1, 1], [0, 1],
     );
   }

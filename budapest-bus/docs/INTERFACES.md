@@ -61,8 +61,10 @@ const bus = buildBus();
 //       transparent: false,          // true -> alpha blended
 //       emissive: [r,g,b],           // 0..1, added on top (unlit glow)
 //       emissiveMap: null,           // texture name used for the emissive term
+//       emissiveStrength: 1,         // multiplier for the emissive term
 //       doubleSided: false,
-//       mirrorUV: false              // true -> sample map with u = 1 - u
+//       mirrorUV: false,             // true -> sample map with u = 1 - u
+//       clearcoat: 0                 // optional hint, ignored by the previewer
 //     }, ...
 //   ],
 //   meshes: [
@@ -85,9 +87,9 @@ fine, but every mesh must have finite values, unit-length normals and UVs in
 
 ## 3. `src/core/png.js` — `encodePNG(width, height, rgba)`
 
-Pure-JS PNG writer (zlib stored/deflate blocks implemented by hand, no Node
-`zlib`), returns a `Uint8Array` of the `.png` file bytes. Works in the browser
-too (for a future "download the model" button).
+Minimal PNG writer (IHDR/IDAT/IEND, no filtering). It compresses with
+`node:zlib`, so it is a *tooling only* module: the textures are written to disk
+by `tools/build-assets.mjs` and the browser reads the resulting PNGs.
 
 ## 4. Tooling
 

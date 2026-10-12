@@ -10,7 +10,8 @@ import { sideStations } from './body.js';
 
 const CEILING = 2.8;
 const WALL_INSET = { w: 0.075, x: 0.09, rc: 0.05 };
-const LINER_ROWS = [0.46, 0.9, 1.4, 1.9, 2.35, 2.6, 2.75, CEILING];
+// the liner starts above the wheel arches so it never crosses a wheel well
+const LINER_ROWS = [1.24, 1.5, 1.85, 2.1, 2.35, 2.6, 2.75, CEILING];
 
 const interiorUV = (p) => [(p[0] + 6) / 12, (p[1] - SPEC.skirt) / (CEILING - SPEC.skirt)];
 const floorUV = (p) => [(p[0] + 6) / 12, (p[2] + 1.2) / 2.4];
@@ -58,15 +59,16 @@ function buildSeats(part) {
   const rows = SPEC.seatRows;
   for (const x of rows) {
     for (const side of [1, -1]) {
-      const cz = side * 0.76;
+      // inboard of the wheel wells, which reach to z = 0.86
+      const cz = side * 0.62;
       seat.box([x, 0.86, cz], [0.5, 0.12, 0.46], { uvScale: 1 });
       seat.box([x - 0.22, 1.12, cz], [0.09, 0.5, 0.46], { uvScale: 1 });
       seat.box([x, 0.66, cz], [0.42, 0.3, 0.4], { uvScale: 1 });
     }
   }
   // rear bench, right across the back
-  seat.box([-4.5, 0.9, 0], [0.5, 0.14, 1.9], { uvScale: 1 });
-  seat.box([-4.72, 1.16, 0], [0.09, 0.5, 1.9], { uvScale: 1 });
+  seat.box([-4.5, 0.9, 0], [0.5, 0.14, 1.72], { uvScale: 1 });
+  seat.box([-4.72, 1.16, 0], [0.09, 0.5, 1.72], { uvScale: 1 });
 }
 
 /** Vertical poles at the doors and rails along the ceiling. */

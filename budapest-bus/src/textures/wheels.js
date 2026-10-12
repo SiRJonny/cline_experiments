@@ -58,33 +58,41 @@ export function tireSide() {
   return image;
 }
 
-/** Aluminium rim: dish, lightening holes, hub and lug nuts. */
+/** Aluminium wheel: dished rim, ventilation holes, hub and lug nuts. */
 export function rimTexture() {
-  const image = new Image(512, 512, '#b6bcc3');
+  const image = new Image(512, 512, '#8f959c');
+  // v runs from the rim lip (0) to the hub (1)
   image.gradientV([
-    [0, 'rgba(255,255,255,0.25)'],
-    [0.3, 'rgba(120,126,134,0.3)'],
-    [0.5, 'rgba(255,255,255,0.2)'],
-    [0.7, 'rgba(120,126,134,0.3)'],
-    [1, 'rgba(255,255,255,0.15)'],
+    [0, 'rgba(40,44,48,0.55)'],
+    [0.14, 'rgba(210,216,224,0.35)'],
+    [0.3, 'rgba(110,116,124,0.35)'],
+    [0.52, 'rgba(190,196,204,0.3)'],
+    [0.72, 'rgba(60,64,70,0.45)'],
+    [1, 'rgba(30,32,36,0.6)'],
   ]);
-  // radial spokes and lightening holes: u is the angle, v the radius
-  for (let k = 0; k < 8; k++) {
-    const u = k / 8;
+  // spokes and ventilation holes (u is the angle around the wheel)
+  const holes = 6;
+  for (let k = 0; k < holes; k++) {
+    const u = k / holes;
     const cx = u * 512;
-    image.ellipse(cx, 256, 34, 62, 'rgba(24,26,30,0.85)');
-    image.ellipse(cx, 256, 28, 55, 'rgba(60,64,70,0.9)');
-    image.ellipse(cx, 246, 20, 40, 'rgba(120,126,134,0.35)');
+    image.fillRoundRect(cx + 16, 200, 36, 112, 16, 'rgba(52,56,62,0.75)');
+    image.fillRoundRect(cx + 22, 208, 24, 96, 12, 'rgba(20,22,26,0.85)');
+    image.fillRoundRect(cx + 26, 214, 18, 84, 10, 'rgba(48,52,58,0.7)');
+    // raised spoke between the holes
+    image.fillRoundRect(cx + 62, 188, 20, 140, 8, 'rgba(226,232,240,0.22)');
   }
-  // hub cap area (the middle band of the texture is the hub)
-  image.fillRect(0, 236, 512, 40, 'rgba(150,156,164,0.9)');
-  for (let k = 0; k < 8; k++) {
-    image.circle(k * 64 + 32, 256, 9, 'rgba(70,74,80,0.9)');
+  // hub: a dark recess with the lug nuts and a small centre cap
+  image.fillRect(0, 322, 512, 40, 'rgba(48,52,58,0.85)');
+  for (let k = 0; k < holes * 2; k++) {
+    image.circle((k + 0.5) * (512 / (holes * 2)), 342, 8, 'rgba(24,26,30,0.9)');
   }
-  // rim lip shading at the top and bottom of the texture
-  image.fillRect(0, 0, 512, 12, 'rgba(40,44,48,0.6)');
-  image.fillRect(0, 500, 512, 12, 'rgba(40,44,48,0.6)');
-  grainOverlay(image, 0.05, 91);
-  satin(image, 0.12, 27, 26);
+  image.fillRect(0, 362, 512, 22, 'rgba(120,126,134,0.9)');
+  image.fillRect(0, 384, 512, 18, 'rgba(168,174,182,0.95)');
+  image.fillRect(0, 402, 512, 20, 'rgba(40,44,48,0.85)');
+  // rim lip shading
+  image.fillRect(0, 0, 512, 10, 'rgba(30,32,36,0.7)');
+  image.fillRect(0, 500, 512, 12, 'rgba(30,32,36,0.5)');
+  grainOverlay(image, 0.06, 91);
+  satin(image, 0.14, 27, 26);
   return image;
 }

@@ -74,7 +74,7 @@ export const SPEC = {
   /** interior */
   seatRows: [2.6, 1.3, 0.0, -1.3, -2.6, -3.9],
   aisleHalfWidth: 0.45,
-  seatWidth: 0.46,
+  seatWidth: 0.44,
 
   /** livery colours (0..1 linear-ish sRGB values for materials without a map) */
   colors: {

@@ -79,16 +79,20 @@ export function buildLowerPanels(part) {
       const xa = stations[i];
       const xb = stations[i + 1];
       if (xb - xa < 1e-4) continue;
-      const yBot = Math.max(archBoundary(xa), archBoundary(xb));
-      if (yBot >= SPEC.belt - 1e-3) continue;
+      const botA = archBoundary(xa);
+      const botB = archBoundary(xb);
+      if (Math.max(botA, botB) >= SPEC.belt - 1e-3) continue;
       for (let j = 0; j + 1 < rows.length; j++) {
-        const y0 = Math.max(rows[j], yBot);
+        // the bottom edge of every column follows the arch curve itself, which
+        // keeps the opening smooth instead of stepped
+        const y0a = Math.max(rows[j], botA);
+        const y0b = Math.max(rows[j], botB);
         const y1 = rows[j + 1];
-        if (y1 - y0 < 0.04) continue; // never emit paper thin slivers
+        if (y1 - Math.max(y0a, y0b) < 0.025) continue; // never emit slivers
         const door = doorAt((xa + xb) / 2, side);
         const inset = door ? 0.004 : 0;
-        const p0 = [xa, y0, zAt(y0) + inset * side];
-        const p1 = [xb, y0, zAt(y0) + inset * side];
+        const p0 = [xa, y0a, zAt(y0a) + inset * side];
+        const p1 = [xb, y0b, zAt(y0b) + inset * side];
         const p2 = [xb, y1, zAt(y1) + inset * side];
         const p3 = [xa, y1, zAt(y1) + inset * side];
         const target = door ? (door.door === 'front' ? doorFront : doorMiddle) : paint;
@@ -99,26 +103,39 @@ export function buildLowerPanels(part) {
       }
     }
 
-    // Wheel wells: a ribbon following the arch boundary, pushed inboard.
+    // Wheel wells: a constant depth cavity behind the arch opening, so the
+    // surfaces always face the opening and never cut through the tyre.
     for (const ax of AXLES) {
       const steps = 28;
-      const loop = [];
+      const backZ = side * (SPEC.halfTrack - 0.2);
+      const inner = [];
+      const outer = [];
       for (let k = 0; k <= steps; k++) {
         const x = ax - ARCH_HALF_WIDTH + (2 * ARCH_HALF_WIDTH * k) / steps;
-        loop.push([x, archBoundary(x), side * (widthAt(archBoundary(x)) - ARCH_DEPTH)]);
+        const y = archBoundary(x);
+        inner.push([x, y, backZ]);
+        outer.push([x, y, side * widthAt(y)]);
       }
-      const uv = (t, v) => [t, v];
-      for (let i = 0; i + 1 < loop.length; i++) {
-        const a = loop[i];
-        const b = loop[i + 1];
-        const a2 = [a[0], a[1], a[2] + side * ARCH_DEPTH];
-        const b2 = [b[0], b[1], b[2] + side * ARCH_DEPTH];
-        if (side > 0) well.quad(a, a2, b2, b, uv(i / steps, 0), uv(i / steps, 1), uv((i + 1) / steps, 1), uv((i + 1) / steps, 0));
-        else well.quad(a2, a, b, b2, uv(i / steps, 1), uv(i / steps, 0), uv((i + 1) / steps, 0), uv((i + 1) / steps, 1));
+      const axle = [ax, SPEC.wheelRadius, side * SPEC.halfTrack];
+      for (let k = 0; k + 1 < inner.length; k++) {
+        const [a0, a1] = [inner[k], inner[k + 1]];
+        const [b0, b1] = [outer[k], outer[k + 1]];
+        // pick the winding whose normal points at the wheel
+        const e1 = [b0[0] - a0[0], b0[1] - a0[1], b0[2] - a0[2]];
+        const e2 = [a1[0] - a0[0], a1[1] - a0[1], a1[2] - a0[2]];
+        const n = [e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2], e1[0] * e2[1] - e1[1] * e2[0]];
+        const mid = [(a0[0] + b1[0]) / 2, (a0[1] + b1[1]) / 2, (a0[2] + b1[2]) / 2];
+        const toAxle = [axle[0] - mid[0], axle[1] - mid[1], axle[2] - mid[2]];
+        const flip = n[0] * toAxle[0] + n[1] * toAxle[1] + n[2] * toAxle[2] < 0;
+        const uv = (t, v) => [t, v];
+        const t0 = k / steps;
+        const t1 = (k + 1) / steps;
+        if (flip) well.quad(a0, b0, b1, a1, uv(t0, 0), uv(t0, 1), uv(t1, 1), uv(t1, 0));
+        else well.quad(b0, a0, a1, b1, uv(t0, 1), uv(t0, 0), uv(t1, 0), uv(t1, 1));
       }
-      // inner wall closing the back of the well (the loop already ends on the
-      // skirt line, so the polygon closes along the bottom edge)
-      const inner = loop.map((p) => [p[0], p[1], p[2] + side * ARCH_DEPTH]);
+      // back wall closing the cavity, facing outwards
+      // the loop already begins and ends on the skirt line, so the polygon
+      // closes along the bottom edge on its own
       well.cap(inner, () => [0.5, 0.5], side < 0);
     }
 

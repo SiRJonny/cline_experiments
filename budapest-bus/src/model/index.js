@@ -8,7 +8,7 @@ import { Part } from './builder.js';
 import { buildShell, capRing, ring, sideStations, UPPER_ROWS, LOWER_ROWS } from './body.js';
 import { buildLowerPanels, buildSideGlass, buildUnderside } from './panels.js';
 import { buildWheels } from './wheels.js';
-import { buildFront, buildRear, buildRoof, buildMirrors } from './details.js';
+import { buildFront, buildRear, buildRoof, buildMirrors, buildSideDisplays } from './details.js';
 import { buildInterior } from './interior.js';
 
 const DARK = [0.09, 0.095, 0.1];
@@ -39,6 +39,7 @@ const MATERIALS = [
   { key: 'lamp.head', name: 'lamp.head', map: 'headlight', roughness: 0.14, metalness: 0.1, emissive: [0.9, 0.9, 0.85], emissiveMap: 'headlightEmit', emissiveStrength: 0.5 },
   { key: 'lamp.tail', name: 'lamp.tail', map: 'taillight', roughness: 0.16, metalness: 0.1, emissive: [0.9, 0.15, 0.12], emissiveMap: 'taillightEmit', emissiveStrength: 0.5 },
   { key: 'led.front', name: 'led.front', map: 'destination', roughness: 0.3, metalness: 0.0, emissive: [1, 0.72, 0.2], emissiveMap: 'destination', emissiveStrength: 1.6 },
+  { key: 'led.side', name: 'led.side', map: 'destinationSide', roughness: 0.3, metalness: 0.0, emissive: [1, 0.72, 0.2], emissiveMap: 'destinationSide', emissiveStrength: 1.6 },
   { key: 'led.rear', name: 'led.rear', map: 'destinationRear', roughness: 0.3, metalness: 0.0, emissive: [1, 0.72, 0.2], emissiveMap: 'destinationRear', emissiveStrength: 1.6 },
   { key: 'plate.front', name: 'plate.front', map: 'plateFront', roughness: 0.45, metalness: 0.1 },
   { key: 'plate.rear', name: 'plate.rear', map: 'plateRear', roughness: 0.45, metalness: 0.1 },
@@ -74,6 +75,7 @@ export function buildBus() {
   buildRear(part);
   buildRoof(part);
   buildMirrors(part);
+  buildSideDisplays(part);
   buildWheels(part);
   buildInterior(part);
 

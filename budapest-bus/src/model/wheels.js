@@ -67,8 +67,8 @@ function buildOneWheel(out, side) {
   const dishZ = outerZ - 0.075;
   out.rim.annulus([0, 0, 0], 'z', dishZ, 0.1, RIM_RADIUS, SEGMENTS, (u, v) => [u, 0.5 + (v - 0.5) * 0.5], { flip: true });
   out.rim.cylinderBand([0, 0, 0], 'z', dishZ, dishZ + 0.02, RIM_RADIUS, SEGMENTS, (u, v) => [u, 0.5 + v * 0.05], { smooth: true });
-  out.rim.cylinderBand([0, 0, 0], 'z', dishZ, dishZ + 0.055, (t) => 0.09 - t * 0.02, SEGMENTS, (u, v) => [u, 0.5 + v * 0.2], { smooth: true });
-  out.rim.annulus([0, 0, 0], 'z', dishZ + 0.055, 0, 0.07, SEGMENTS, () => [0.5, 0.5], { flip: false });
+  out.rim.cylinderBand([0, 0, 0], 'z', dishZ, dishZ + 0.018, (t) => 0.075 - t * 0.012, SEGMENTS, (u, v) => [u, 0.5 + v * 0.2], { smooth: true });
+  out.rim.disc([0, 0, 0], 'z', dishZ + 0.018, 0.063, SEGMENTS, (u, v) => [u, 0.62 + v * 0.1], { flip: false });
   // brake disc behind the rim
   out.brake.annulus([0, 0, 0], 'z', dishZ - 0.02, 0, RIM_RADIUS - 0.01, SEGMENTS, () => [0.5, 0.5], { flip: true });
 }

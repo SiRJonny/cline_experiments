@@ -19,9 +19,9 @@
     ]
   },
   "stats": {
-    "triangles": 9367,
-    "meshes": 26,
-    "materials": 26,
+    "triangles": 9393,
+    "meshes": 27,
+    "materials": 27,
     "textures": [
       "bodySideR",
       "bodySideL",
@@ -223,6 +223,19 @@
       "metalness": 0.9
     },
     {
+      "name": "led.side",
+      "map": "destinationSide",
+      "roughness": 0.3,
+      "metalness": 0,
+      "emissive": [
+        1,
+        0.72,
+        0.2
+      ],
+      "emissiveMap": "destinationSide",
+      "emissiveStrength": 1.6
+    },
+    {
       "name": "rubber.tread",
       "map": "tireTread",
       "roughness": 0.9,
@@ -304,8 +317,8 @@
     {
       "name": "panel.right",
       "material": "paint.side.right",
-      "vertices": 2892,
-      "triangles": 1446
+      "vertices": 2912,
+      "triangles": 1456
     },
     {
       "name": "door.front",
@@ -328,14 +341,14 @@
     {
       "name": "wheel.wells",
       "material": "plastic.dark",
-      "vertices": 2344,
-      "triangles": 1058
+      "vertices": 2348,
+      "triangles": 1060
     },
     {
       "name": "panel.left",
       "material": "paint.side.left",
-      "vertices": 3020,
-      "triangles": 1510
+      "vertices": 3040,
+      "triangles": 1520
     },
     {
       "name": "body.under",
@@ -386,6 +399,12 @@
       "triangles": 424
     },
     {
+      "name": "led.side",
+      "material": "led.side",
+      "vertices": 4,
+      "triangles": 2
+    },
+    {
       "name": "wheels.tread",
       "material": "rubber.tread",
       "vertices": 448,
@@ -406,8 +425,8 @@
     {
       "name": "interior.liner",
       "material": "interior.wall",
-      "vertices": 2220,
-      "triangles": 1082
+      "vertices": 2224,
+      "triangles": 1084
     },
     {
       "name": "interior.floor",
