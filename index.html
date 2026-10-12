@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BKV city bus — procedural 3D model &amp; viewer</title>
+    <meta
+      name="description"
+      content="A 12 m Budapest (BKV) blue city bus whose mesh and textures are generated entirely from JavaScript — with an interactive three.js viewer."
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0f18;
+        --panel: rgba(16, 22, 34, 0.82);
+        --border: rgba(140, 170, 220, 0.22);
+        --text: #e7eefb;
+        --muted: #9fb0c9;
+        --accent: #4d8cf5;
+        --accent-2: #123b8c;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: radial-gradient(1200px 700px at 50% -10%, #16223c 0%, var(--bg) 60%);
+        color: var(--text);
+        font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 56px; }
+      header h1 { margin: 0 0 6px; font-size: clamp(22px, 3.2vw, 34px); letter-spacing: 0.2px; }
+      header p { margin: 0; color: var(--muted); max-width: 78ch; }
+      .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 18px; padding: 0; list-style: none; }
+      .badges li {
+        font-size: 12.5px; color: var(--muted);
+        border: 1px solid var(--border); border-radius: 999px; padding: 5px 11px;
+        background: rgba(20, 28, 44, 0.6);
+      }
+      .links { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+      a.button {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 10px 15px; border-radius: 10px; text-decoration: none;
+        border: 1px solid var(--border); background: rgba(22, 30, 48, 0.85); color: var(--text);
+        font-weight: 560; font-size: 14px; transition: border-color 0.15s ease, transform 0.15s ease;
+      }
+      a.button:hover { border-color: var(--accent); transform: translateY(-1px); }
+      a.button.primary { background: linear-gradient(180deg, #2f63bd, var(--accent-2)); border-color: #3c74d6; }
+      .stage {
+        position: relative; border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+        background: #0d1220; box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+      }
+      .stage iframe { display: block; width: 100%; height: min(74vh, 780px); border: 0; background: #0d1220; }
+      .stage .hint {
+        position: absolute; left: 12px; bottom: 12px; z-index: 2;
+        font-size: 12px; color: var(--muted); background: rgba(10, 14, 24, 0.75);
+        border: 1px solid var(--border); border-radius: 8px; padding: 5px 9px; pointer-events: none;
+      }
+      h2 { font-size: 18px; margin: 34px 0 10px; }
+      .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+      .gallery a { display: block; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #0d1220; }
+      .gallery img { display: block; width: 100%; height: auto; }
+      .gallery span { display: block; padding: 7px 10px; font-size: 12.5px; color: var(--muted); }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+      .card { border: 1px solid var(--border); border-radius: 12px; padding: 14px 15px; background: var(--panel); }
+      .card h3 { margin: 0 0 6px; font-size: 14.5px; }
+      .card p { margin: 0; color: var(--muted); font-size: 13.5px; }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: #cfe0ff; }
+      footer { margin-top: 34px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border); padding-top: 16px; }
+      footer a { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>BKV city bus — procedural 3D model</h1>
+        <p>
+          A 12 m low-floor city bus in Budapest (BKV) blue livery — the kind that runs on
+          routes 5, 7, 8E, 105 and 200E. The mesh is lofted and stitched by JavaScript and
+          every texture is painted pixel by pixel in JavaScript: no downloaded models, no
+          image assets, no build step on GitHub's side.
+        </p>
+        <ul class="badges">
+          <li>≈9 400 triangles · 27 materials</li>
+          <li>26 procedurally painted PNG textures</li>
+          <li>real wheel-arch cut-outs &amp; interior</li>
+          <li>route 200E → Kőbánya-Kispest M</li>
+          <li>three.js vendored, works offline</li>
+        </ul>
+      </header>
+
+      <nav class="links">
+        <a class="button primary" href="./budapest-bus/">Open the viewer full screen →</a>
+        <a class="button" href="./budapest-bus/assets/model/bkv_bus.obj">Download OBJ (1.4 MB)</a>
+        <a class="button" href="./budapest-bus/assets/model/bkv_bus.mtl">MTL</a>
+        <a class="button" href="./budapest-bus/assets/model/model.json">model.json</a>
+        <a class="button" href="./budapest-bus/assets/textures/">Textures</a>
+        <a class="button" href="./budapest-bus/README.md">README</a>
+      </nav>
+
+      <div class="stage">
+        <iframe
+          src="./budapest-bus/"
+          title="Interactive 3D viewer: BKV city bus"
+          loading="lazy"
+          allowfullscreen
+        ></iframe>
+        <p class="hint">drag to orbit · scroll to zoom · day/night, wireframe and OBJ modes in the panel</p>
+      </div>
+
+      <h2>Pre-rendered views</h2>
+      <div class="gallery">
+        <a href="./budapest-bus/preview/hero.png"><img src="./budapest-bus/preview/hero.png" alt="Three quarter view of the bus" loading="lazy" /><span>hero</span></a>
+        <a href="./budapest-bus/preview/side.png"><img src="./budapest-bus/preview/side.png" alt="Right hand side of the bus" loading="lazy" /><span>side (doors)</span></a>
+        <a href="./budapest-bus/preview/front.png"><img src="./budapest-bus/preview/front.png" alt="Front of the bus" loading="lazy" /><span>front</span></a>
+        <a href="./budapest-bus/preview/rear.png"><img src="./budapest-bus/preview/rear.png" alt="Rear of the bus" loading="lazy" /><span>rear</span></a>
+        <a href="./budapest-bus/preview/wheel.png"><img src="./budapest-bus/preview/wheel.png" alt="Close up of a wheel and its arch" loading="lazy" /><span>wheel arch</span></a>
+        <a href="./budapest-bus/preview/top.png"><img src="./budapest-bus/preview/top.png" alt="Roof seen from above" loading="lazy" /><span>roof</span></a>
+      </div>
+      <p style="color: var(--muted); font-size: 13px">
+        These are rendered by <code>budapest-bus/tools/render-preview.mjs</code>, a
+        dependency-free software rasteriser, so they can be produced without a GPU or a browser.
+      </p>
+
+      <h2>How it is made</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Mesh</h3>
+          <p>
+            One lofted surface: a plan-view outline whose half width, front and rear extents
+            and corner radius are functions of height. Quads between consecutive rings are
+            routed to paint, window band, glass or roof. Panels, doors, lamps, mirrors and the
+            interior sit on top of that shell.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Textures</h3>
+          <p>
+            A small software raster image (anti-aliased lines, polygons, gradients, grime) plus
+            a hand-built single-stroke font that also covers Hungarian accents — so the
+            destination reads “Kőbánya-Kispest M” on a real dot-matrix LED panel.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Why it is like this</h3>
+          <p>
+            Everything is generated from code on purpose: the model, the paint and the tooling
+            live in one repository, diff-able and testable. <code>tests/geometry.test.mjs</code>
+            checks 144 000 invariants of the mesh.
+          </p>
+        </div>
+      </div>
+
+      <footer>
+        Source: <a href="https://github.com/SiRJonny/cline_experiments">github.com/SiRJonny/cline_experiments</a>
+        · three.js is vendored under its MIT licence and used only to display the model, never to build it.
+      </footer>
+    </main>
+  </body>
+</html>
+

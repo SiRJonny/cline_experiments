@@ -134,14 +134,22 @@ The folder is completely static (`index.html`, `src/`, `vendor/three/`,
 `assets/`, `preview/`), with no bundler and no server side code, so GitHub Pages
 can serve it as-is. Pick whichever route suits you:
 
+The repository is currently published from **`main` / root**, which serves
+`index.html` (a landing page that embeds this viewer) at
+<https://sirjonny.github.io/cline_experiments/> and the viewer itself at
+<https://sirjonny.github.io/cline_experiments/budapest-bus/>.
+
 | Route | Setup | URL |
 | --- | --- | --- |
-| `gh-pages` branch (already pushed for you) | Settings → Pages → *Deploy from a branch* → `gh-pages` → `/ (root)` | `https://<owner>.github.io/<repo>/` |
-| Whole repo from `main` | Settings → Pages → *Deploy from a branch* → `main` → `/ (root)` | `https://<owner>.github.io/<repo>/budapest-bus/` |
+| Whole repo from `main` (**in use**) | Settings → Pages → *Deploy from a branch* → `main` → `/ (root)` | root landing page + `.../budapest-bus/` for the viewer |
+| `gh-pages` branch (kept in sync by the script below) | Settings → Pages → *Deploy from a branch* → `gh-pages` → `/ (root)` | viewer directly at `https://<owner>.github.io/<repo>/` |
 | GitHub Actions | copy `docs/pages-workflow.yml` to `.github/workflows/pages.yml`, then Settings → Pages → Source: **GitHub Actions** | `https://<owner>.github.io/<repo>/` |
 
 Notes:
 
+* The root `index.html` is a landing page: it embeds the viewer in an
+  iframe, links the OBJ / MTL / model.json / textures and shows the
+  pre-rendered views. It exists because Pages serves the repository root.
 * `.nojekyll` is committed at the repository root **and** inside this folder.
   Jekyll excludes `vendor/` by default, which would break the import map that
   loads three.js.
