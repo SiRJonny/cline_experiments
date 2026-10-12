@@ -1,0 +1,49 @@
+# Copy this file to `.github/workflows/pages.yml` to publish the viewer with
+# GitHub Actions (that is the only place GitHub will pick it up from).
+#
+# Publishes the procedural bus viewer to GitHub Pages.
+# The site is the `budapest-bus/` folder: it is fully static (three.js is
+# vendored, the textures and the OBJ are committed), so the only build step is
+# regenerating the assets, which keeps the published site in sync with the
+# source even if someone forgets to run the build tool.
+#
+# One-time setup: repository Settings -> Pages -> Build and deployment ->
+# Source: "GitHub Actions".  After that every push to main that touches the
+# project republishes https://<owner>.github.io/<repo>/
+name: Publish bus viewer to Pages
+
+on:
+  push:
+    branches: [main]
+    paths: ['budapest-bus/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Regenerate textures and the exported mesh
+        run: node budapest-bus/tools/build-assets.mjs
+      - name: Check the model still passes its own tests
+        run: |
+          node budapest-bus/tests/geometry.test.mjs
+          node budapest-bus/tools/render-preview.mjs --selftest
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: budapest-bus
+      - id: deployment
+        uses: actions/deploy-pages@v4
