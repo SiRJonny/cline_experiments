@@ -1,0 +1,425 @@
+{
+  "name": "BKV city bus 12 m (procedural)",
+  "units": "metres",
+  "axes": {
+    "forward": "+X",
+    "up": "+Y",
+    "right": "+Z"
+  },
+  "bounds": {
+    "min": [
+      -6.02,
+      0,
+      -1.6800000000000002
+    ],
+    "max": [
+      6.058962722878399,
+      3.44,
+      1.6800000000000002
+    ]
+  },
+  "stats": {
+    "triangles": 8478,
+    "meshes": 26,
+    "materials": 26,
+    "textures": [
+      "bodySideR",
+      "bodySideL",
+      "bodyFront",
+      "bodyRear",
+      "roof",
+      "doorFront",
+      "doorMiddle",
+      "glass",
+      "band",
+      "tire",
+      "rim",
+      "headlight",
+      "taillight",
+      "destination",
+      "destinationSide",
+      "destinationRear",
+      "plateFront",
+      "plateRear",
+      "floor",
+      "seat",
+      "plasticDark",
+      "metal",
+      "rubber"
+    ]
+  },
+  "materials": [
+    {
+      "name": "band.black",
+      "map": "band",
+      "baseColor": [
+        0.045,
+        0.045,
+        0.05
+      ],
+      "roughness": 0.42,
+      "metalness": 0.05
+    },
+    {
+      "name": "paint.front",
+      "map": "bodyFront",
+      "roughness": 0.34,
+      "metalness": 0.06,
+      "clearcoat": 0.6
+    },
+    {
+      "name": "paint.rear",
+      "map": "bodyRear",
+      "roughness": 0.34,
+      "metalness": 0.06,
+      "clearcoat": 0.6
+    },
+    {
+      "name": "glass.side",
+      "map": "glass",
+      "roughness": 0.08,
+      "metalness": 0,
+      "opacity": 0.82,
+      "transparent": true,
+      "doubleSided": true
+    },
+    {
+      "name": "glass.front",
+      "map": "glass",
+      "roughness": 0.06,
+      "metalness": 0,
+      "opacity": 0.72,
+      "transparent": true,
+      "doubleSided": true
+    },
+    {
+      "name": "paint.roof",
+      "map": "roof",
+      "roughness": 0.5,
+      "metalness": 0.04
+    },
+    {
+      "name": "paint.side.right",
+      "map": "bodySideR",
+      "roughness": 0.34,
+      "metalness": 0.06,
+      "clearcoat": 0.6
+    },
+    {
+      "name": "door.front",
+      "map": "doorFront",
+      "roughness": 0.4,
+      "metalness": 0.05
+    },
+    {
+      "name": "door.middle",
+      "map": "doorMiddle",
+      "roughness": 0.4,
+      "metalness": 0.05
+    },
+    {
+      "name": "rubber.black",
+      "map": "rubber",
+      "baseColor": [
+        0.035,
+        0.035,
+        0.04
+      ],
+      "roughness": 0.92,
+      "metalness": 0
+    },
+    {
+      "name": "plastic.dark",
+      "map": "plasticDark",
+      "roughness": 0.68,
+      "metalness": 0.08
+    },
+    {
+      "name": "paint.side.left",
+      "map": "bodySideL",
+      "mirrorUV": true,
+      "roughness": 0.34,
+      "metalness": 0.06,
+      "clearcoat": 0.6
+    },
+    {
+      "name": "paint.plain",
+      "baseColor": [
+        0.09,
+        0.095,
+        0.1
+      ],
+      "roughness": 0.65,
+      "metalness": 0.1
+    },
+    {
+      "name": "lamp.head",
+      "map": "headlight",
+      "roughness": 0.14,
+      "metalness": 0.1,
+      "emissive": [
+        0.9,
+        0.9,
+        0.85
+      ],
+      "emissiveMap": "headlightEmit",
+      "emissiveStrength": 0.5
+    },
+    {
+      "name": "plate.front",
+      "map": "plateFront",
+      "roughness": 0.45,
+      "metalness": 0.1
+    },
+    {
+      "name": "led.front",
+      "map": "destination",
+      "roughness": 0.3,
+      "metalness": 0,
+      "emissive": [
+        1,
+        0.72,
+        0.2
+      ],
+      "emissiveMap": "destination",
+      "emissiveStrength": 1.6
+    },
+    {
+      "name": "lamp.tail",
+      "map": "taillight",
+      "roughness": 0.16,
+      "metalness": 0.1,
+      "emissive": [
+        0.9,
+        0.15,
+        0.12
+      ],
+      "emissiveMap": "taillightEmit",
+      "emissiveStrength": 0.5
+    },
+    {
+      "name": "plate.rear",
+      "map": "plateRear",
+      "roughness": 0.45,
+      "metalness": 0.1
+    },
+    {
+      "name": "led.rear",
+      "map": "destinationRear",
+      "roughness": 0.3,
+      "metalness": 0,
+      "emissive": [
+        1,
+        0.72,
+        0.2
+      ],
+      "emissiveMap": "destinationRear",
+      "emissiveStrength": 1.6
+    },
+    {
+      "name": "metal.brushed",
+      "map": "metal",
+      "roughness": 0.3,
+      "metalness": 0.9
+    },
+    {
+      "name": "rubber.tread",
+      "map": "tireTread",
+      "roughness": 0.9,
+      "metalness": 0
+    },
+    {
+      "name": "rubber.sidewall",
+      "map": "tireSide",
+      "roughness": 0.86,
+      "metalness": 0
+    },
+    {
+      "name": "metal.rim",
+      "map": "rim",
+      "roughness": 0.32,
+      "metalness": 0.85
+    },
+    {
+      "name": "interior.wall",
+      "baseColor": [
+        0.62,
+        0.63,
+        0.62
+      ],
+      "roughness": 0.85,
+      "metalness": 0,
+      "doubleSided": true
+    },
+    {
+      "name": "interior.floor",
+      "map": "floor",
+      "roughness": 0.8,
+      "metalness": 0
+    },
+    {
+      "name": "interior.seat",
+      "map": "seat",
+      "roughness": 0.85,
+      "metalness": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "band",
+      "material": "band.black",
+      "vertices": 768,
+      "triangles": 384
+    },
+    {
+      "name": "paint.front",
+      "material": "paint.front",
+      "vertices": 360,
+      "triangles": 180
+    },
+    {
+      "name": "paint.rear",
+      "material": "paint.rear",
+      "vertices": 360,
+      "triangles": 180
+    },
+    {
+      "name": "glass",
+      "material": "glass.side",
+      "vertices": 340,
+      "triangles": 170
+    },
+    {
+      "name": "glass.front",
+      "material": "glass.front",
+      "vertices": 132,
+      "triangles": 66
+    },
+    {
+      "name": "paint.roof",
+      "material": "paint.roof",
+      "vertices": 1235,
+      "triangles": 589
+    },
+    {
+      "name": "panel.right",
+      "material": "paint.side.right",
+      "vertices": 1864,
+      "triangles": 932
+    },
+    {
+      "name": "door.front",
+      "material": "door.front",
+      "vertices": 64,
+      "triangles": 32
+    },
+    {
+      "name": "door.middle",
+      "material": "door.middle",
+      "vertices": 64,
+      "triangles": 32
+    },
+    {
+      "name": "door.seals",
+      "material": "rubber.black",
+      "vertices": 80,
+      "triangles": 40
+    },
+    {
+      "name": "wheel.wells",
+      "material": "plastic.dark",
+      "vertices": 2200,
+      "triangles": 1062
+    },
+    {
+      "name": "panel.left",
+      "material": "paint.side.left",
+      "vertices": 1992,
+      "triangles": 996
+    },
+    {
+      "name": "body.under",
+      "material": "paint.plain",
+      "vertices": 12,
+      "triangles": 4
+    },
+    {
+      "name": "lamp.head",
+      "material": "lamp.head",
+      "vertices": 144,
+      "triangles": 72
+    },
+    {
+      "name": "plate.front",
+      "material": "plate.front",
+      "vertices": 8,
+      "triangles": 4
+    },
+    {
+      "name": "led.front",
+      "material": "led.front",
+      "vertices": 16,
+      "triangles": 8
+    },
+    {
+      "name": "lamp.tail",
+      "material": "lamp.tail",
+      "vertices": 144,
+      "triangles": 72
+    },
+    {
+      "name": "plate.rear",
+      "material": "plate.rear",
+      "vertices": 8,
+      "triangles": 4
+    },
+    {
+      "name": "led.rear",
+      "material": "led.rear",
+      "vertices": 16,
+      "triangles": 8
+    },
+    {
+      "name": "rear.exhaust",
+      "material": "metal.brushed",
+      "vertices": 848,
+      "triangles": 424
+    },
+    {
+      "name": "wheels.tread",
+      "material": "rubber.tread",
+      "vertices": 448,
+      "triangles": 224
+    },
+    {
+      "name": "wheels.sidewall",
+      "material": "rubber.sidewall",
+      "vertices": 896,
+      "triangles": 448
+    },
+    {
+      "name": "wheels.rim",
+      "material": "metal.rim",
+      "vertices": 1792,
+      "triangles": 896
+    },
+    {
+      "name": "interior.liner",
+      "material": "interior.wall",
+      "vertices": 2231,
+      "triangles": 1087
+    },
+    {
+      "name": "interior.floor",
+      "material": "interior.floor",
+      "vertices": 252,
+      "triangles": 84
+    },
+    {
+      "name": "interior.seats",
+      "material": "interior.seat",
+      "vertices": 960,
+      "triangles": 480
+    }
+  ]
+}

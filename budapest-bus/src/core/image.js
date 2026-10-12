@@ -23,7 +23,10 @@ export function toRGBA(color, alphaScale = 1) {
     let s = color.trim();
     if (s.startsWith('rgb')) {
       const nums = s.replace(/[^0-9.,]/g, '').split(',').map(Number);
-      return [nums[0] | 0, nums[1] | 0, nums[2] | 0, Math.round((nums[3] ?? 255) * alphaScale)];
+      // the fourth component is a 0..1 alpha for `rgba(...)`, 0..255 otherwise
+      let a = nums.length > 3 ? nums[3] : 255;
+      if (a <= 1) a *= 255;
+      return [nums[0] | 0, nums[1] | 0, nums[2] | 0, Math.round(a * alphaScale)];
     }
     if (s.startsWith('#')) s = s.slice(1);
     if (s.length === 3) s = s.split('').map((c) => c + c).join('');

@@ -1,0 +1,218 @@
+# BKV city bus — materials
+# 26 materials
+
+newmtl band.black
+Kd 0.045 0.045 0.05
+Ka 0.0045 0.0045 0.005
+Ks 0.58 0.58 0.58
+Ns 232
+d 1
+map_Kd textures/band.png
+
+newmtl paint.front
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.66 0.66 0.66
+Ns 264
+d 1
+map_Kd textures/bodyFront.png
+
+newmtl paint.rear
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.66 0.66 0.66
+Ns 264
+d 1
+map_Kd textures/bodyRear.png
+
+newmtl glass.side
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.92 0.92 0.92
+Ns 368
+d 0.82
+Tr 1
+map_Kd textures/glass.png
+
+newmtl glass.front
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.94 0.94 0.94
+Ns 376
+d 0.72
+Tr 1
+map_Kd textures/glass.png
+
+newmtl paint.roof
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+map_Kd textures/roof.png
+
+newmtl paint.side.right
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.66 0.66 0.66
+Ns 264
+d 1
+map_Kd textures/bodySideR.png
+
+newmtl door.front
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.6 0.6 0.6
+Ns 240
+d 1
+map_Kd textures/doorFront.png
+
+newmtl door.middle
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.6 0.6 0.6
+Ns 240
+d 1
+map_Kd textures/doorMiddle.png
+
+newmtl rubber.black
+Kd 0.035 0.035 0.04
+Ka 0.0035 0.0035 0.004
+Ks 0.08 0.08 0.08
+Ns 32
+d 1
+map_Kd textures/rubber.png
+
+newmtl plastic.dark
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.32 0.32 0.32
+Ns 128
+d 1
+map_Kd textures/plasticDark.png
+
+newmtl paint.side.left
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.66 0.66 0.66
+Ns 264
+d 1
+map_Kd textures/bodySideL.png
+
+newmtl paint.plain
+Kd 0.09 0.095 0.1
+Ka 0.009 0.0095 0.01
+Ks 0.35 0.35 0.35
+Ns 140
+d 1
+
+newmtl lamp.head
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.86 0.86 0.86
+Ns 344
+d 1
+map_Kd textures/headlight.png
+map_Ke textures/headlightEmit.png
+Ke 0.9 0.9 0.85
+
+newmtl plate.front
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.55 0.55 0.55
+Ns 220
+d 1
+map_Kd textures/plateFront.png
+
+newmtl led.front
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.7 0.7 0.7
+Ns 280
+d 1
+map_Kd textures/destination.png
+map_Ke textures/destination.png
+Ke 1 0.72 0.2
+
+newmtl lamp.tail
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.84 0.84 0.84
+Ns 336
+d 1
+map_Kd textures/taillight.png
+map_Ke textures/taillightEmit.png
+Ke 0.9 0.15 0.12
+
+newmtl plate.rear
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.55 0.55 0.55
+Ns 220
+d 1
+map_Kd textures/plateRear.png
+
+newmtl led.rear
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.7 0.7 0.7
+Ns 280
+d 1
+map_Kd textures/destinationRear.png
+map_Ke textures/destinationRear.png
+Ke 1 0.72 0.2
+
+newmtl metal.brushed
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.7 0.7 0.7
+Ns 280
+d 1
+map_Kd textures/metal.png
+
+newmtl rubber.tread
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.1 0.1 0.1
+Ns 40
+d 1
+map_Kd textures/tireTread.png
+
+newmtl rubber.sidewall
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.14 0.14 0.14
+Ns 56
+d 1
+map_Kd textures/tireSide.png
+
+newmtl metal.rim
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.68 0.68 0.68
+Ns 272
+d 1
+map_Kd textures/rim.png
+
+newmtl interior.wall
+Kd 0.62 0.63 0.62
+Ka 0.062 0.063 0.062
+Ks 0.15 0.15 0.15
+Ns 60
+d 1
+
+newmtl interior.floor
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.2 0.2 0.2
+Ns 80
+d 1
+map_Kd textures/floor.png
+
+newmtl interior.seat
+Kd 0.5 0.5 0.5
+Ka 0.05 0.05 0.05
+Ks 0.15 0.15 0.15
+Ns 60
+d 1
+map_Kd textures/seat.png
