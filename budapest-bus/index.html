@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>BKV city bus — procedural viewer</title>
+    <meta name="description" content="Fully procedural BKV (Budapest) blue city bus: mesh and textures generated in JavaScript, viewed with three.js." />
+    <style>
+      :root {
+        color-scheme: dark;
+        --panel-bg: rgba(14, 20, 32, 0.78);
+        --panel-border: rgba(140, 170, 220, 0.22);
+        --text: #e7eefb;
+        --muted: #9fb0c9;
+        --accent: #4d8cf5;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        height: 100%;
+        background: #0b0f18;
+        color: var(--text);
+        font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        overflow: hidden;
+      }
+
+      /* The WebGL canvas fills the window; the HUD floats on top of it. */
+      #viewer { position: fixed; inset: 0; }
+      #viewer canvas { display: block; }
+
+      #hud {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 10;
+        max-width: min(320px, calc(100vw - 32px));
+      }
+
+      .hud-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 14px;
+        background: var(--panel-bg);
+        border: 1px solid var(--panel-border);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: opacity 0.2s ease;
+      }
+
+      .hud-panel.hud-busy { opacity: 0.65; }
+
+      .hud-title { margin: 0; font-size: 18px; font-weight: 650; letter-spacing: 0.2px; }
+      .hud-subtitle { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
+
+      .hud-field { display: flex; flex-direction: column; gap: 5px; }
+      .hud-field-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+
+      .hud-select {
+        width: 100%;
+        padding: 7px 9px;
+        border-radius: 9px;
+        border: 1px solid var(--panel-border);
+        background: rgba(8, 12, 20, 0.9);
+        color: var(--text);
+        font: inherit;
+      }
+      .hud-select:disabled { opacity: 0.55; }
+
+      .hud-toggles { display: flex; flex-direction: column; gap: 8px; }
+      .hud-toggle { display: flex; align-items: center; gap: 9px; cursor: pointer; user-select: none; }
+      .hud-toggle input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+      .hud-toggle-label { font-size: 13px; }
+
+      .hud-footer { display: flex; justify-content: flex-end; }
+      .hud-fps {
+        font-variant-numeric: tabular-nums;
+        font-size: 12px;
+        color: var(--muted);
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .hud-status {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.4;
+        color: var(--muted);
+        display: none;
+        padding: 8px 10px;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.05);
+        border-left: 3px solid var(--accent);
+        overflow-wrap: anywhere;
+      }
+      .hud-status.hud-status-visible { display: block; }
+      .hud-status[data-kind="ok"] { border-left-color: #37c47a; color: #cfeede; }
+      .hud-status[data-kind="warn"] { border-left-color: #f0b429; color: #f7e6bf; }
+      .hud-status[data-kind="error"] { border-left-color: #f2555a; color: #ffd9da; }
+
+      /* Full screen overlays: loading spinner and the fatal-error card. */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(120% 120% at 50% 0%, #16213a 0%, #0b0f18 70%);
+        transition: opacity 0.35s ease;
+      }
+      .overlay.hidden { opacity: 0; pointer-events: none; }
+
+      .spinner {
+        width: 42px; height: 42px; margin: 0 auto 14px;
+        border: 3px solid rgba(255, 255, 255, 0.15);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.9s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      .overlay-card {
+        max-width: 520px;
+        margin: 24px;
+        padding: 24px 26px;
+        border-radius: 16px;
+        background: var(--panel-bg);
+        border: 1px solid var(--panel-border);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+        text-align: left;
+      }
+      .overlay-card h2 { margin: 0 0 8px; font-size: 17px; }
+      .overlay-card p { margin: 6px 0; color: var(--muted); font-size: 13px; }
+      .error-message {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 9px;
+        background: rgba(0, 0, 0, 0.35);
+        font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: #ffc9cb;
+        overflow-wrap: anywhere;
+      }
+      .loading-text { text-align: center; color: var(--muted); font-size: 13px; }
+
+      @media (max-width: 560px) {
+        #hud { top: 10px; right: 10px; left: 10px; max-width: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- WebGL canvas mount point and the floating control panel. -->
+    <div id="viewer"></div>
+    <div id="hud"></div>
+
+    <!-- Shown until the first model is ready. -->
+    <div id="loading" class="overlay">
+      <div class="loading-text">
+        <div class="spinner"></div>
+        Loading the bus…
+      </div>
+    </div>
+
+    <!-- Shown only if three.js (or the viewer module) fails to load. -->
+    <div id="error" class="overlay hidden">
+      <div class="overlay-card">
+        <h2>The viewer could not start</h2>
+        <p>
+          three.js is vendored in <code>vendor/three/</code>, so the page works offline.
+          Make sure you open it through the dev server (<code>node budapest-bus/tools/serve.mjs</code>)
+          rather than as a <code>file://</code> URL — ES module import maps need HTTP.
+        </p>
+        <div class="error-message"></div>
+      </div>
+    </div>
+
+    <!--
+      Import map: the addons import the bare specifier "three", and the vendored
+      three.module.js imports "./three.core.js" relatively, so this works fully
+      offline without a bundler.
+    -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./vendor/three/three.module.js",
+          "three/addons/": "./vendor/three/addons/"
+        }
+      }
+    </script>
+
+    <!--
+      Bootstrap: import the viewer and surface any failure in the error overlay
+      instead of leaving a blank page.
+    -->
+    <script type="module">
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      const errorMessage = error.querySelector('.error-message');
+
+      try {
+        await import('./src/viewer/main.js');
+      } catch (err) {
+        console.error('[viewer] failed to start', err);
+        loading.classList.add('hidden');
+        error.classList.remove('hidden');
+        errorMessage.textContent = String((err && err.message) || err);
+      }
+    </script>
+  </body>
+</html>
+
