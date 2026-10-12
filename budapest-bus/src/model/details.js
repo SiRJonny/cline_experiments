@@ -77,7 +77,7 @@ export function buildFront(part) {
     const z0 = side > 0 ? 0.5 : -1.14;
     const z1 = side > 0 ? 1.14 : -0.5;
     frontPanel(part, { y0: 0.84, y1: 1.32, z0, z1, offset: 0.006, nx: 6, ny: 3, material: DARK, uv: () => [0.5, 0.5] });
-    frontPanel(part, { y0: 0.87, y1: 1.29, z0: z0 + 0.03, z1: z1 - 0.03, offset: 0.022, nx: 6, ny: 3, material: { key: 'lamp.head', name: 'lamp.head' }, uv: rectUV(z0, z1, 0.87, 1.29) });
+    frontPanel(part, { y0: 0.87, y1: 1.29, z0: z0 + 0.03, z1: z1 - 0.03, offset: 0.022, nx: 6, ny: 3, material: { key: 'lamp.head', name: 'lamp.head' }, uv: rectUV(z1, z0, 0.87, 1.29) });
   }
 
   // grille: three slats under the windshield
@@ -93,20 +93,20 @@ export function buildFront(part) {
   }
 
   // number plate on the bumper
-  frontPanel(part, { y0: 0.44, y1: 0.6, z0: -0.28, z1: 0.28, offset: 0.078, nx: 2, ny: 1, material: { key: 'plate.front', name: 'plate.front' }, uv: rectUV(-0.28, 0.28, 0.44, 0.6) });
+  frontPanel(part, { y0: 0.44, y1: 0.6, z0: -0.28, z1: 0.28, offset: 0.078, nx: 2, ny: 1, material: { key: 'plate.front', name: 'plate.front' }, uv: rectUV(0.28, -0.28, 0.44, 0.6) });
 
   // destination display, a recessed box above the windshield
-  const displayY0 = SPEC.glassTop + 0.06;
-  const displayY1 = displayY0 + 0.34;
-  frontPanel(part, { y0: displayY0, y1: displayY1, z0: -1.02, z1: 1.02, offset: 0.05, nx: 4, ny: 1, material: DARK, uv: () => [0.5, 0.5] });
-  frontPanel(part, { y0: displayY0 + 0.04, y1: displayY1 - 0.04, z0: -0.95, z1: 0.95, offset: 0.055, nx: 4, ny: 1, material: { key: 'led.front', name: 'led.front' }, uv: rectUV(-0.95, 0.95, displayY0, displayY1) });
+  const displayY0 = SPEC.glassTop + 0.07;
+  const displayY1 = displayY0 + 0.3;
+  frontPanel(part, { y0: displayY0, y1: displayY1, z0: -0.86, z1: 0.86, offset: 0.02, nx: 2, ny: 1, material: DARK, uv: () => [0.5, 0.5] });
+  frontPanel(part, { y0: displayY0 + 0.035, y1: displayY1 - 0.035, z0: -0.8, z1: 0.8, offset: 0.03, nx: 2, ny: 1, material: { key: 'led.front', name: 'led.front' }, uv: rectUV(0.8, -0.8, displayY0, displayY1) });
 
   // wipers, parked at the bottom of the windshield
   for (const side of [1, -1]) {
-    const z0 = side * 0.14;
-    const z1 = side * 0.96;
-    const y = 2.02;
-    trim.quad([frontSurfaceX(z1, y) + 0.02, y, z1], [frontSurfaceX(z0, y) + 0.02, y, z0], [frontSurfaceX(z0, y) + 0.05, y + 0.05, z0], [frontSurfaceX(z1, y) + 0.05, y + 0.05, z1], [1, 0], [0, 0], [0, 1], [1, 1]);
+    const z0 = side * 0.16;
+    const z1 = side * 0.92;
+    const y = 2.0;
+    trim.quad([frontSurfaceX(z1, y) + 0.015, y, z1], [frontSurfaceX(z0, y) + 0.015, y, z0], [frontSurfaceX(z0, y) + 0.03, y + 0.035, z0], [frontSurfaceX(z1, y) + 0.03, y + 0.035, z1], [1, 0], [0, 0], [0, 1], [1, 1]);
   }
 }
 
@@ -172,39 +172,67 @@ export function buildRoof(part) {
 
 
 
-/** Mirrors: a stalk made of short box segments plus the mirror heads. */
+/**
+ * A thin square section tube from `a` to `b` (used for the mirror stalks).
+ * @param {object} target part to append to
+ */
+function stalk(target, a, b, radius = 0.028, steps = 6) {
+  const dir = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+  const len = Math.hypot(dir[0], dir[1], dir[2]) || 1;
+  const f = [dir[0] / len, dir[1] / len, dir[2] / len];
+  // any vector not parallel to f gives us a stable frame
+  const up = Math.abs(f[1]) > 0.9 ? [1, 0, 0] : [0, 1, 0];
+  const r = [f[1] * up[2] - f[2] * up[1], f[2] * up[0] - f[0] * up[2], f[0] * up[1] - f[1] * up[0]];
+  const rl = Math.hypot(r[0], r[1], r[2]) || 1;
+  const rx = [r[0] / rl, r[1] / rl, r[2] / rl];
+  const uy = [f[1] * rx[2] - f[2] * rx[1], f[2] * rx[0] - f[0] * rx[2], f[0] * rx[1] - f[1] * rx[0]];
+  const at = (t, sgn) => [
+    a[0] + dir[0] * t + (rx[0] + uy[0] * sgn) * radius,
+    a[1] + dir[1] * t + (rx[1] + uy[1] * sgn) * radius,
+    a[2] + dir[2] * t + (rx[2] + uy[2] * sgn) * radius,
+  ];
+  const uv = (t, v) => [t, v];
+  for (let i = 0; i < steps; i++) {
+    const t0 = i / steps;
+    const t1 = (i + 1) / steps;
+    for (const sgn of [1, -1]) {
+      const a0 = at(t0, sgn);
+      const a1 = at(t1, sgn);
+      const b0 = [a0[0] - uy[0] * radius * 2 * sgn, a0[1] - uy[1] * radius * 2 * sgn, a0[2] - uy[2] * radius * 2 * sgn];
+      const b1 = [a1[0] - uy[0] * radius * 2 * sgn, a1[1] - uy[1] * radius * 2 * sgn, a1[2] - uy[2] * radius * 2 * sgn];
+      if (sgn > 0) target.quad(a0, b0, b1, a1, uv(t0, 0), uv(t0, 1), uv(t1, 1), uv(t1, 0));
+      else target.quad(b0, a0, a1, b1, uv(t0, 1), uv(t0, 0), uv(t1, 0), uv(t1, 1));
+    }
+  }
+}
+
+/** Mirrors: a stalk plus a main and a wide angle mirror head on each side. */
 export function buildMirrors(part) {
   const trim = part('plastic.dark', 'mirrors');
   const glass = part('glass', 'mirrors.glass');
   for (const side of [1, -1]) {
-    const anchor = [frontSurfaceX(side * 1.12, 2.34) - 0.02, 2.34, side * 1.18];
-    const tip = [anchor[0] + 0.16, 2.42, side * 1.54];
-    const steps = 4;
-    for (let i = 0; i < steps; i++) {
-      const t0 = i / steps;
-      const t1 = (i + 1) / steps;
-      const mid = [0, 1, 2].map((c) => anchor[c] + (tip[c] - anchor[c]) * ((t0 + t1) / 2));
-      const len = Math.hypot(...[0, 1, 2].map((c) => (tip[c] - anchor[c]) / steps));
-      trim.box([mid[0], mid[1], mid[2]], [Math.abs(tip[0] - anchor[0]) / steps + 0.02, Math.abs(tip[1] - anchor[1]) / steps + 0.02, Math.abs(tip[2] - anchor[2]) / steps + 0.02]);
-      void len;
-    }
-    // mirror head: a shallow box with a glass face towards the driver
-    const head = [tip[0] + 0.05, 2.4, tip[2] + side * 0.04];
-    trim.box([head[0], head[1], head[2]], [0.09, 0.44, 0.2]);
+    const anchor = [frontSurfaceX(side * 1.12, 2.3) - 0.02, 2.3, side * 1.16];
+    const tip = [anchor[0] + 0.22, 2.4, side * 1.56];
+    stalk(trim, anchor, tip, 0.03);
+    // main mirror head
+    const head = [tip[0] + 0.06, 2.4, tip[2] + side * 0.05];
+    trim.box([head[0], head[1], head[2]], [0.1, 0.5, 0.22]);
     glass.quad(
-      [head[0] - 0.046, head[1] - 0.2, head[2] - 0.09],
-      [head[0] - 0.046, head[1] - 0.2, head[2] + 0.09],
-      [head[0] - 0.046, head[1] + 0.2, head[2] + 0.09],
-      [head[0] - 0.046, head[1] + 0.2, head[2] - 0.09],
+      [head[0] - 0.051, head[1] - 0.23, head[2] - 0.1],
+      [head[0] - 0.051, head[1] - 0.23, head[2] + 0.1],
+      [head[0] - 0.051, head[1] + 0.23, head[2] + 0.1],
+      [head[0] - 0.051, head[1] + 0.23, head[2] - 0.1],
       [0, 0], [1, 0], [1, 1], [0, 1],
     );
-    // wide angle mirror below the head
-    trim.box([head[0] - 0.02, 2.06, head[2]], [0.07, 0.16, 0.16]);
+    // wide angle mirror under the head
+    const wide = [head[0] - 0.03, 2.02, head[2]];
+    stalk(trim, [head[0] - 0.02, head[1] - 0.24, head[2]], wide, 0.022, 3);
+    trim.box([wide[0], wide[1], wide[2]], [0.08, 0.2, 0.18]);
     glass.quad(
-      [head[0] - 0.056, 2.0, head[2] - 0.07],
-      [head[0] - 0.056, 2.0, head[2] + 0.07],
-      [head[0] - 0.056, 2.12, head[2] + 0.07],
-      [head[0] - 0.056, 2.12, head[2] - 0.07],
+      [wide[0] - 0.041, wide[1] - 0.085, wide[2] - 0.08],
+      [wide[0] - 0.041, wide[1] - 0.085, wide[2] + 0.08],
+      [wide[0] - 0.041, wide[1] + 0.085, wide[2] + 0.08],
+      [wide[0] - 0.041, wide[1] + 0.085, wide[2] - 0.08],
       [0, 0], [1, 0], [1, 1], [0, 1],
     );
   }

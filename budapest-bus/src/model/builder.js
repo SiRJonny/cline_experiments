@@ -186,6 +186,7 @@ export class Part {
   /** Annulus (ring) perpendicular to `axis`, centred at `center`. */
   annulus(center, axis, pos, innerRadius, outerRadius, segments, uvFn = (u, v) => [u, v], opts = {}) {
     const { flip = false, smooth = false } = opts;
+    if (innerRadius <= 1e-6) return this.disc(center, axis, pos, outerRadius, segments, uvFn, { flip, smooth });
     const ax = { x: 0, y: 1, z: 2 }[axis];
     const a1 = (ax + 1) % 3;
     const a2 = (ax + 2) % 3;
@@ -198,6 +199,34 @@ export class Part {
       return [p[0] + center[0], p[1] + center[1], p[2] + center[2]];
     };
     return this.grid(segments, 1, (u, v) => at(innerRadius + (outerRadius - innerRadius) * v, u), uvFn, { smooth });
+  }
+
+  /** Filled disc perpendicular to `axis` (fan from the centre, no slivers). */
+  disc(center, axis, pos, radius, segments, uvFn = (u, v) => [u, v], opts = {}) {
+    const { flip = false } = opts;
+    const ax = { x: 0, y: 1, z: 2 }[axis];
+    const a1 = (ax + 1) % 3;
+    const a2 = (ax + 2) % 3;
+    const at = (angT) => {
+      const ang = angT * Math.PI * 2 * (flip ? -1 : 1);
+      const p = [0, 0, 0];
+      p[ax] = pos;
+      p[a1] = radius * Math.cos(ang);
+      p[a2] = radius * Math.sin(ang);
+      return [p[0] + center[0], p[1] + center[1], p[2] + center[2]];
+    };
+    const centre = [center[0], center[1], center[2]];
+    centre[ax] += pos;
+    for (let i = 0; i < segments; i++) {
+      const a = at(i / segments);
+      const b = at((i + 1) / segments);
+      const uvA = uvFn(i / segments, 0, a);
+      const uvB = uvFn((i + 1) / segments, 0, b);
+      const uvC = uvFn((i + 0.5) / segments, 1, centre);
+      if (flip) this.triangle(centre, b, a, uvC, uvB, uvA);
+      else this.triangle(centre, a, b, uvC, uvA, uvB);
+    }
+    return this;
   }
 
   /** Ribbon: a loop of points extruded along `dir` (wheel arch surrounds). */

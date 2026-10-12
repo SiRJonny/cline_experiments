@@ -47,7 +47,7 @@ export function buildInterior(part) {
   dark.box([-5.1, 1.05, 0], [0.9, 1.2, 2.1]);
   for (const bay of SPEC.bays) {
     if (!bay.door) continue;
-    dark.box([(bay.x0 + bay.x1) / 2, 0.3, 1.05], [bay.x1 - bay.x0, 0.28, 0.4]);
+    dark.box([(bay.x0 + bay.x1) / 2, 0.5, 0.98], [bay.x1 - bay.x0, 0.16, 0.28]);
   }
   return wall;
 }

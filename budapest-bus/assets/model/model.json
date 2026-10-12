@@ -10,16 +10,16 @@
     "min": [
       -6.02,
       0,
-      -1.6800000000000002
+      -1.7200000000000002
     ],
     "max": [
-      6.058962722878399,
+      6.152767741254253,
       3.44,
-      1.6800000000000002
+      1.7200000000000002
     ]
   },
   "stats": {
-    "triangles": 8478,
+    "triangles": 9367,
     "meshes": 26,
     "materials": 26,
     "textures": [
@@ -268,8 +268,8 @@
     {
       "name": "band",
       "material": "band.black",
-      "vertices": 768,
-      "triangles": 384
+      "vertices": 732,
+      "triangles": 366
     },
     {
       "name": "paint.front",
@@ -280,8 +280,8 @@
     {
       "name": "paint.rear",
       "material": "paint.rear",
-      "vertices": 360,
-      "triangles": 180
+      "vertices": 356,
+      "triangles": 178
     },
     {
       "name": "glass",
@@ -292,20 +292,20 @@
     {
       "name": "glass.front",
       "material": "glass.front",
-      "vertices": 132,
-      "triangles": 66
+      "vertices": 168,
+      "triangles": 84
     },
     {
       "name": "paint.roof",
       "material": "paint.roof",
-      "vertices": 1235,
-      "triangles": 589
+      "vertices": 1212,
+      "triangles": 578
     },
     {
       "name": "panel.right",
       "material": "paint.side.right",
-      "vertices": 1864,
-      "triangles": 932
+      "vertices": 2892,
+      "triangles": 1446
     },
     {
       "name": "door.front",
@@ -328,14 +328,14 @@
     {
       "name": "wheel.wells",
       "material": "plastic.dark",
-      "vertices": 2200,
-      "triangles": 1062
+      "vertices": 2344,
+      "triangles": 1058
     },
     {
       "name": "panel.left",
       "material": "paint.side.left",
-      "vertices": 1992,
-      "triangles": 996
+      "vertices": 3020,
+      "triangles": 1510
     },
     {
       "name": "body.under",
@@ -358,8 +358,8 @@
     {
       "name": "led.front",
       "material": "led.front",
-      "vertices": 16,
-      "triangles": 8
+      "vertices": 8,
+      "triangles": 4
     },
     {
       "name": "lamp.tail",
@@ -400,20 +400,20 @@
     {
       "name": "wheels.rim",
       "material": "metal.rim",
-      "vertices": 1792,
-      "triangles": 896
+      "vertices": 1680,
+      "triangles": 784
     },
     {
       "name": "interior.liner",
       "material": "interior.wall",
-      "vertices": 2231,
-      "triangles": 1087
+      "vertices": 2220,
+      "triangles": 1082
     },
     {
       "name": "interior.floor",
       "material": "interior.floor",
-      "vertices": 252,
-      "triangles": 84
+      "vertices": 249,
+      "triangles": 83
     },
     {
       "name": "interior.seats",

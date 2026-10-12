@@ -11,8 +11,8 @@
 import { SPEC, widthAt, frontAt, rearAt, sideGlassRanges } from './spec.js';
 import { sideStations } from './body.js';
 
-const ARCH_HALF_WIDTH = 0.72;
-const ARCH_HEIGHT = 0.74;
+const ARCH_HALF_WIDTH = 0.73;
+const ARCH_HEIGHT = 0.82;
 const ARCH_EXPONENT = 0.55;
 const ARCH_DEPTH = 0.3;
 
@@ -32,7 +32,7 @@ export function archBoundary(x) {
 export function panelStations() {
   const marks = new Set(sideStations());
   for (const ax of AXLES) {
-    for (let k = -12; k <= 12; k++) marks.add(ax + ARCH_HALF_WIDTH * Math.sin((k / 12) * (Math.PI / 2)));
+    for (let k = -24; k <= 24; k++) marks.add(ax + ARCH_HALF_WIDTH * Math.sin((k / 24) * (Math.PI / 2)));
   }
   return [...marks].sort((a, b) => a - b);
 }
@@ -101,7 +101,7 @@ export function buildLowerPanels(part) {
 
     // Wheel wells: a ribbon following the arch boundary, pushed inboard.
     for (const ax of AXLES) {
-      const steps = 16;
+      const steps = 28;
       const loop = [];
       for (let k = 0; k <= steps; k++) {
         const x = ax - ARCH_HALF_WIDTH + (2 * ARCH_HALF_WIDTH * k) / steps;
@@ -116,10 +116,10 @@ export function buildLowerPanels(part) {
         if (side > 0) well.quad(a, a2, b2, b, uv(i / steps, 0), uv(i / steps, 1), uv((i + 1) / steps, 1), uv((i + 1) / steps, 0));
         else well.quad(a2, a, b, b2, uv(i / steps, 1), uv(i / steps, 0), uv((i + 1) / steps, 0), uv((i + 1) / steps, 1));
       }
-      // inner wall closing the back of the well
+      // inner wall closing the back of the well (the loop already ends on the
+      // skirt line, so the polygon closes along the bottom edge)
       const inner = loop.map((p) => [p[0], p[1], p[2] + side * ARCH_DEPTH]);
-      const wall = [...inner, [ax + ARCH_HALF_WIDTH, SPEC.skirt, inner[0][2]], [ax - ARCH_HALF_WIDTH, SPEC.skirt, inner[0][2]]];
-      well.cap(wall, () => [0.5, 0.5], side < 0);
+      well.cap(inner, () => [0.5, 0.5], side < 0);
     }
 
     // Door seals: thin dark bands filling the step around each door leaf.

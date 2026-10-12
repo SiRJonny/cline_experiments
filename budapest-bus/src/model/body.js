@@ -76,6 +76,11 @@ export function ring(y, stations, inset = null) {
     const a = Math.PI - (i / CORNER_STEPS) * (Math.PI / 2);
     push(xr + rc + rc * Math.cos(a), w - rc + rc * Math.sin(a), 'rear');
   }
+  // the rear right corner ends exactly where the right hand side starts, so
+  // drop the duplicate point and keep the loop clean
+  const first = out[0];
+  const last = out[out.length - 1];
+  if (first && last && Math.abs(first.p[0] - last.p[0]) < 1e-6 && Math.abs(first.p[2] - last.p[2]) < 1e-6) out.pop();
   return out;
 }
 
@@ -94,7 +99,8 @@ export function sideStations() {
 
 /** Which material a shell quad belongs to. */
 function shellMaterial(seg, cx, cy, cz) {
-  const cornerRegion = Math.abs(cz) > widthAt(cy) - cornerAt(cy) - 0.01;
+  // the window pillars live in the rounded plan corners of the body
+  const cornerRegion = Math.abs(cz) > widthAt(cy) - cornerAt(cy) * 0.5;
   if (seg === 'sideR' || seg === 'sideL') {
     if (cy < SPEC.belt + 0.06) return 'band';
     if (cy < SPEC.glassTop) {
