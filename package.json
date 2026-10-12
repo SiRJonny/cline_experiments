@@ -1,0 +1,19 @@
+{
+  "name": "cline-experiments",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Scratch repo for experiments. See budapest-bus/ for the hand-built BKV bus model + viewer.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:bus": "node budapest-bus/tools/build-assets.mjs",
+    "preview:bus": "node budapest-bus/tools/render-preview.mjs",
+    "test:bus": "node budapest-bus/tests/geometry.test.mjs",
+    "serve:bus": "node budapest-bus/tools/serve.mjs"
+  },
+  "devDependencies": {
+    "three": "0.186.1"
+  }
+}
